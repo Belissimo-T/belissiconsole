@@ -166,6 +166,17 @@ def stderr_print(text, **kwargs):
     else:
         print(text, **kwargs, file=sys.stderr)
 
+def rainbow_print(text, **kwargs):
+    global __HUE
+    if SUPPORTS_ANSI:
+        r = Rainbow(text)
+        r.hue = __HUE
+        r.strength = 4
+        __HUE += len(text)
+        print(r.get_rainbowed_text(), **kwargs)
+    else:
+        print(text, **kwargs, file=sys.stderr)
+
 # def win_next_red():
 #     if os.name != "nt":
 #         return
@@ -175,7 +186,7 @@ def stderr_print(text, **kwargs):
 #     std_err_handle = windll.kernel32.GetStdHandle(-12)
 #
 #     windll.kernel32.SetConsoleTextAttribute(std_err_handle, FOREGROUND_RED)
-
+__HUE = 0
 IS_PYCHARM = True
 SUPPORTS_ANSI = None
 check_for_support()

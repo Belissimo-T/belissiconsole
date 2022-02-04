@@ -8,8 +8,12 @@ def main():
     # time.sleep(5)
     # a.stop()
 
-    a = bc.rainbow("🌈 THIS SHOULD BE A RAINBOW 🌈\n"
-                   "🌈 WITH MULTIPLE LINES 🌈")
+    bc.rainbow_print("WOW SO PRETTY1")
+    bc.rainbow_print("WOW SO PRETTY2")
+    bc.rainbow_print("WOW SO PRETTY3")
+    bc.rainbow_print("WOW SO PRETTY4")
+
+    a = bc.rainbow("🌈 THIS SHOULD BE A RAINBOW 🌈")
     time.sleep(5)
     a.stop()
 

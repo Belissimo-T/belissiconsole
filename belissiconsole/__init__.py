@@ -2,6 +2,8 @@ import os
 import sys
 import time
 from threading import Thread
+
+import sty
 from sty import fg, rs
 import colorsys
 
@@ -52,7 +54,9 @@ class Rainbow:
 
     def start(self):
         self.running = True
-        Thread(target=self.loop).start()
+        t = Thread(target=self.loop)
+        t.daemon = True
+        t.start()
 
     def stop(self):
         self.running = False
@@ -140,12 +144,10 @@ def windows_check_for_ansi_support():
 def check_for_support():
     global SUPPORTS_ANSI, IS_PYCHARM
 
-    is_pycharm = 'PYCHARM_HOSTED' in os.environ and os.environ['PYCHARM_HOSTED'] == '1'
-
-    IS_PYCHARM = not is_pycharm
+    IS_PYCHARM = 'PYCHARM_HOSTED' in os.environ and os.environ['PYCHARM_HOSTED'] == '1'
 
     if (hasattr(sys.stdout, "isatty") and sys.stdout.isatty()) or \
-            ('TERM' in os.environ and os.environ['TERM'] == 'ANSI') or is_pycharm:
+            ('TERM' in os.environ and os.environ['TERM'] == 'ANSI') or IS_PYCHARM:
         # terminal supposedly supports ansi
         SUPPORTS_ANSI = True
 
@@ -157,6 +159,22 @@ def check_for_support():
         # on cmds we need to "enable" ansi support
         windows_enable_ansi_lol()
 
+
+def stderr_print(text, **kwargs):
+    if SUPPORTS_ANSI:
+        print(sty.fg.red + text + sty.rs.fg, **kwargs, file=sys.stderr)
+    else:
+        print(text, **kwargs, file=sys.stderr)
+
+# def win_next_red():
+#     if os.name != "nt":
+#         return
+#     from ctypes import LibraryLoader, WinDLL
+#
+#     windll = LibraryLoader(WinDLL)
+#     std_err_handle = windll.kernel32.GetStdHandle(-12)
+#
+#     windll.kernel32.SetConsoleTextAttribute(std_err_handle, FOREGROUND_RED)
 
 IS_PYCHARM = True
 SUPPORTS_ANSI = None

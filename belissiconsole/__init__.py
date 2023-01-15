@@ -10,7 +10,7 @@ import colorsys
 
 class Rainbow:
     def __init__(self, text: str, speed: float = 1):
-        self.lines = text.split("\n")
+        self.lines = [text.replace("\n", "").replace("\r", "")] if IS_PYCHARM else text.split("\n")
         self.speed = speed
         self.strength = 3
         self.vertical_strength = 1
@@ -44,7 +44,7 @@ class Rainbow:
             print("\r" + self.get_rainbowed_text(), end="", flush=True)
 
             # go up one line for every \n that is used
-            if len(self.lines) - 1 > 1:
+            if len(self.lines) - 1 >= 1:
                 print(f"\u001b[{len(self.lines) - 1}F", end="", flush=True)
 
             # increase hue

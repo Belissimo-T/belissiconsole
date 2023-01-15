@@ -10,7 +10,7 @@ import colorsys
 
 class Rainbow:
     def __init__(self, text: str, speed: float = 1):
-        self.lines = text.split("\n") if IS_PYCHARM else [text.replace("\n", "").replace("\r", "")]
+        self.lines = text.split("\n")
         self.speed = speed
         self.strength = 3
         self.vertical_strength = 1
@@ -44,7 +44,8 @@ class Rainbow:
             print("\r" + self.get_rainbowed_text(), end="", flush=True)
 
             # go up one line for every \n that is used
-            print(f"\u001b[{len(self.lines) - 1}F", end="", flush=True)
+            if len(self.lines) - 1 > 1:
+                print(f"\u001b[{len(self.lines) - 1}F", end="", flush=True)
 
             # increase hue
             self.increase_hue()
@@ -75,8 +76,8 @@ def windows_stdout(text: str):
     os.system(f"@echo {text}\u001b[1F")
 
 
-def windows_enable_ansi_lol():
-    # somehow, sending a single ansi escape sequence/echo/whatever enables back the ansi support on cmds !?
+def cmd_enable_ansi():
+    # this is somewhat undocumented, an empty string printed will enable ansi support for cmds
     windows_stdout("")
 
 
@@ -157,7 +158,7 @@ def check_for_support():
 
     if os.name == "nt":
         # on cmds we need to "enable" ansi support
-        windows_enable_ansi_lol()
+        cmd_enable_ansi()
 
 
 def stderr_print(text, **kwargs):
@@ -165,6 +166,7 @@ def stderr_print(text, **kwargs):
         print(sty.fg.red + text + sty.rs.fg, **kwargs, file=sys.stderr)
     else:
         print(text, **kwargs, file=sys.stderr)
+
 
 def rainbow_print(text, **kwargs):
     global __HUE
@@ -176,6 +178,7 @@ def rainbow_print(text, **kwargs):
         print(r.get_rainbowed_text(), **kwargs)
     else:
         print(text, **kwargs, file=sys.stderr)
+
 
 # def win_next_red():
 #     if os.name != "nt":
